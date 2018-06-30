@@ -6,7 +6,9 @@ import '../node_modules/font-awesome/css/font-awesome.min.css'
 
 
 ReactDOM.render(
-    <CourseManager/>,
+    <div className="jumbotron-fluid bg-light text-dark">
+    <CourseManager/>
+    </div>,
     document.getElementById('root')
 )
 
