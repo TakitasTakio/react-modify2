@@ -6,9 +6,9 @@ class ICourseEditor extends React.Component {
 
     constructor(props){
         super(props);
-        this.selectCourse = this.selectCourse.bind(this);
-        this.state = {courseId:''};
 
+        this.state = {courseId:''};
+        this.selectCourse = this.selectCourse.bind(this);
 
     }
 

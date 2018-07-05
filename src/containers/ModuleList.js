@@ -8,25 +8,44 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 export default class ModuleList
     extends React.Component{
+
+
+
+
        constructor(props){
            super(props);
        this.state={ courseId: '',
-               module: {id:'',title:''},
-           modules:[
-
-           ]}
+               module: { },
+           modules:[]}
        this.titleChanged = this.titleChanged.bind(this)
        this.createModule = this.createModule.bind(this)
        this.setCourseId = this.setCourseId.bind(this)
        this.setModuleTitle = this.setModuleTitle.bind(this)
+       this.deleteModule = this.deleteModule.bind(this)
 
        this.moduleService = ModuleService.instance
 
        }
 
+
+
     setCourseId(courseId){
            this.setState({courseId: courseId});
     }
+    componentDidMount() {
+        this.setCourseId(this.props.courseId);
+    }
+    setModules(modules) {
+        this.setState({modules: modules})
+    }
+
+
+    componentWillReceiveProps(newProps){
+        this.setCourseId(newProps.courseId);
+        this.findAllModulesForCourse(newProps.courseId)
+
+    }
+
 
     setModuleTitle(event) {
         this.setState({module: {
@@ -51,12 +70,19 @@ export default class ModuleList
 
 
     }
+    findAllModulesForCourse(courseId) {
+        this.moduleService
+            .findAllModulesForCourse(courseId)
+            .then((modules) => {this.setModules(modules)});
+    }
+
+
 
     renderListOfModules(){
 
            let modules =
-               this.state.modules.map((module)=> {
-               return (<ModuleListItem
+               this.state.modules.map(module=> {
+               return ( <ModuleListItem
                    key={module.id} module={module} delete={this.deleteModule}/>)
 
            });
@@ -64,25 +90,12 @@ export default class ModuleList
 
     }
 
-    findAllModulesForCourse(courseId) {
-        this.moduleService
-            .findAllModulesForCourse(courseId)
-            .then((modules) => {this.setModules(modules)});
-    }
-
-    setModules(modules) {
-        this.setState({modules: [modules]})
-    }
 
 
-    componentDidMount() {
-        this.setCourseId(this.props.courseId);
-    }
-    componentWillReceiveProps(newProps){
-        this.setCourseId(newProps.courseId);
-        this.findAllModulesForCourse(newProps.courseId)
 
-    }
+
+
+
 
     deleteModule(moduleId) {
         this.moduleService
@@ -91,6 +104,7 @@ export default class ModuleList
                 this.findAllModulesForCourse
                 (this.state.courseId)
             });
+
     }
 
 
@@ -116,17 +130,21 @@ export default class ModuleList
 
                </ul>
 
-               <Router>
+
                <div className="row">
                        <div className="col-4">
                            <h4>Module ...</h4>
                        </div>
+
                <div className="col-8">
+                   <Router>
                    <Route path="/course/:courseId/module/:moduleId"
                           component={ModuleEditor}/>
+                   </Router>
+
                </div>
                </div>
-               </Router>
+
 
 
                </div>
